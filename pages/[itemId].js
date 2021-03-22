@@ -4,6 +4,10 @@ import Link from 'next/link';
 
 const ItemDetails = props => {
     const { item } = props;
+
+    if(!item) {
+        return <p className='centered'>Loading...</p>
+    }
     
     return <div className='centered'>
         <h2>{item.title}</h2>
@@ -35,11 +39,9 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
     return {
         paths: [
-            { params: { itemId: 'itemId1' } },
-            { params: { itemId: 'itemId2' } },
-            { params: { itemId: 'itemId3' } }
+            { params: { itemId: 'itemId1' } }
         ],
-        fallback: false
+        fallback: true
     }
 }
 
