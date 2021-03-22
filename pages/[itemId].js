@@ -1,12 +1,14 @@
 import path from 'path';
 import fs from 'fs/promises';
+import Link from 'next/link';
 
 const ItemDetails = props => {
     const { item } = props;
     
     return <div className='centered'>
-        <h3>{item.title}</h3>
+        <h2>{item.title}</h2>
         <p>{item.description}</p>
+        <Link href='/'>Go Bacc</Link>
     </div>
 
 }
@@ -14,9 +16,9 @@ const ItemDetails = props => {
 //runs before the component runs.
 export async function getStaticProps(context) {
     const { params } = context;
-    const iId = params.ItemId;
+    const iId = params.itemId;
     const filePath = path.join(process.cwd(), 'data','dummy-data.json');
-    const stringifiedData = fs.readFile(filePath);
+    const stringifiedData = await fs.readFile(filePath);
     const data = JSON.parse(stringifiedData);
 
     const foundItem = data.items.find(item=>item.id===iId);
@@ -26,8 +28,18 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { item: foundItem },
-        revalidate: 10
+        props: { item: foundItem }
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [
+            { params: { itemId: 'itemId1' } },
+            { params: { itemId: 'itemId2' } },
+            { params: { itemId: 'itemId3' } }
+        ],
+        fallback: false
     }
 }
 
