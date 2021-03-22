@@ -41,7 +41,7 @@ export async function getStaticPaths() {
         paths: [
             { params: { itemId: 'itemId1' } }
         ],
-        fallback: true
+        fallback: 'blocking'
     }
 }
 
