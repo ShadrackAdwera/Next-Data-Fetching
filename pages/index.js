@@ -14,7 +14,9 @@ export async function getStaticProps() {
     const data = JSON.parse(stringifiedData);
     return {props: {
         items: data.items
-    }};
+    },
+    revalidate: 10 
+};
 }
 
 export default HomePage;
