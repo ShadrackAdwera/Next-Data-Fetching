@@ -14,16 +14,19 @@ const ItemDetails = props => {
         <p>{item.description}</p>
         <Link href='/'>Go Bacc</Link>
     </div>
+}
 
+const fetchData = async() => {
+    const filePath = path.join(process.cwd(), 'data' , 'dummy-data.json');
+    const stringifiedData = await fs.readFile(filePath);
+    return JSON.parse(stringifiedData);
 }
 
 //runs before the component runs.
 export async function getStaticProps(context) {
     const { params } = context;
     const iId = params.itemId;
-    const filePath = path.join(process.cwd(), 'data','dummy-data.json');
-    const stringifiedData = await fs.readFile(filePath);
-    const data = JSON.parse(stringifiedData);
+    const data = await fetchData();
 
     const foundItem = data.items.find(item=>item.id===iId);
 
@@ -37,10 +40,13 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
+    const data = await fetchData();
+    const ids = [];
+    for(const item of data.items) {
+        ids.push({params: { itemId: item.id }});
+    }
     return {
-        paths: [
-            { params: { itemId: 'itemId1' } }
-        ],
+        paths: ids,
         fallback: 'blocking'
     }
 }
